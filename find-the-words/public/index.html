@@ -1,0 +1,1064 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Find the Words — AI Whisperer Academy</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Mulish:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --teal: #16A085;
+    --teal-dark: #0E6E5C;
+    --teal-mist: #F0FBF8;
+    --teal-tint: #D6F5EC;
+    --yellow: #F1C40F;
+    --purple: #7D3C98;
+    --ink: #1F2937;
+    --muted: #6B7280;
+    --line: #E5E7EB;
+    --paper: #FBFAF6;
+    --paper-warm: #F7F4EC;
+  }
+
+  * { box-sizing: border-box; }
+
+  html, body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Mulish', -apple-system, system-ui, sans-serif;
+    color: var(--ink);
+    background: var(--paper);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  body {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* ---------- Header ---------- */
+  header.brand {
+    background: var(--teal);
+    color: white;
+    padding: 18px 28px 14px;
+    border-bottom: 4px solid var(--yellow);
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+  .brand-mark {
+    width: 32px;
+    height: 32px;
+    background: var(--yellow);
+    color: var(--teal-dark);
+    font-weight: 800;
+    font-size: 13px;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    letter-spacing: 0.3px;
+  }
+  .brand-text { line-height: 1.1; }
+  .brand-text strong {
+    font-size: 15px;
+    letter-spacing: 0.2px;
+  }
+  .brand-text span {
+    display: block;
+    font-size: 11px;
+    color: var(--teal-tint);
+    margin-top: 2px;
+  }
+  .brand-title {
+    margin-left: auto;
+    font-family: 'Fraunces', serif;
+    font-size: 22px;
+    font-weight: 500;
+    letter-spacing: -0.2px;
+  }
+  .brand-title em { font-style: italic; font-weight: 400; }
+
+  main {
+    flex: 1;
+    width: 100%;
+    max-width: 880px;
+    margin: 0 auto;
+    padding: 36px 28px 60px;
+  }
+
+  footer {
+    border-top: 1px solid var(--line);
+    padding: 14px 28px;
+    font-size: 12px;
+    color: var(--muted);
+    display: flex;
+    justify-content: space-between;
+    background: white;
+  }
+  footer strong { color: var(--teal); font-weight: 700; }
+
+  /* ---------- Typography ---------- */
+  h1 {
+    font-family: 'Fraunces', serif;
+    font-weight: 500;
+    font-size: 38px;
+    line-height: 1.1;
+    margin: 0 0 12px;
+    letter-spacing: -0.5px;
+  }
+  h1 em {
+    font-style: italic;
+    color: var(--teal);
+    font-weight: 400;
+  }
+  .lede {
+    font-size: 16px;
+    line-height: 1.55;
+    color: var(--muted);
+    max-width: 620px;
+    margin: 0 0 30px;
+  }
+  h2 {
+    font-family: 'Fraunces', serif;
+    font-weight: 500;
+    font-size: 22px;
+    margin: 0 0 12px;
+    letter-spacing: -0.2px;
+  }
+
+  /* ---------- Screens ---------- */
+  .screen { display: none; }
+  .screen.active { display: block; animation: fadeIn .35s ease-out; }
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(6px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ---------- Scenario picker ---------- */
+  .scenarios {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 14px;
+    margin-top: 18px;
+  }
+  @media (min-width: 720px) {
+    .scenarios { grid-template-columns: 1fr 1fr 1fr; }
+  }
+  .scenario {
+    background: white;
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: 22px 20px 20px;
+    text-align: left;
+    cursor: pointer;
+    transition: transform .15s ease, border-color .15s ease, box-shadow .15s ease;
+    font-family: inherit;
+    color: inherit;
+    display: flex;
+    flex-direction: column;
+  }
+  .scenario:hover {
+    border-color: var(--teal);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 22px -14px rgba(22, 160, 133, 0.35);
+  }
+  .scenario-tag {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    color: var(--teal);
+    font-weight: 700;
+    margin-bottom: 10px;
+  }
+  .scenario-tag.purple { color: var(--purple); }
+  .scenario h3 {
+    font-family: 'Fraunces', serif;
+    font-weight: 500;
+    font-size: 19px;
+    margin: 0 0 8px;
+    line-height: 1.25;
+  }
+  .scenario p {
+    margin: 0;
+    font-size: 13.5px;
+    color: var(--muted);
+    line-height: 1.5;
+    flex: 1;
+  }
+  .scenario-cta {
+    margin-top: 16px;
+    font-size: 12px;
+    color: var(--teal);
+    font-weight: 700;
+    letter-spacing: 0.3px;
+  }
+  .scenario:hover .scenario-cta::after { transform: translateX(4px); }
+  .scenario-cta::after {
+    content: " →";
+    display: inline-block;
+    transition: transform .15s ease;
+  }
+
+  /* ---------- Briefing screen ---------- */
+  .briefing-card {
+    background: white;
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: 26px 28px;
+    margin-top: 18px;
+  }
+  .briefing-card h3 {
+    font-family: 'Fraunces', serif;
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 1.2px;
+    color: var(--purple);
+    margin: 0 0 8px;
+    font-weight: 600;
+  }
+  .briefing-card .scene {
+    font-size: 16px;
+    line-height: 1.55;
+    margin: 0 0 16px;
+  }
+  .briefing-card .scene strong { color: var(--ink); }
+  .briefing-card .opener-label {
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--muted);
+    font-weight: 700;
+    margin: 18px 0 8px;
+  }
+  .briefing-card .opener {
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    font-size: 17px;
+    line-height: 1.45;
+    color: var(--teal-dark);
+    background: var(--teal-mist);
+    border-left: 3px solid var(--teal);
+    padding: 14px 16px;
+    border-radius: 4px;
+  }
+  .briefing-actions {
+    display: flex;
+    gap: 12px;
+    margin-top: 22px;
+  }
+
+  /* ---------- Buttons ---------- */
+  button.primary, button.secondary {
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 700;
+    padding: 11px 22px;
+    border-radius: 6px;
+    cursor: pointer;
+    border: 1px solid transparent;
+    transition: all .15s ease;
+    letter-spacing: 0.2px;
+  }
+  button.primary {
+    background: var(--teal);
+    color: white;
+  }
+  button.primary:hover { background: var(--teal-dark); }
+  button.primary:disabled {
+    background: var(--line);
+    color: var(--muted);
+    cursor: not-allowed;
+  }
+  button.secondary {
+    background: white;
+    color: var(--ink);
+    border-color: var(--line);
+  }
+  button.secondary:hover { border-color: var(--teal); color: var(--teal); }
+
+  /* ---------- Chat ---------- */
+  .chat-header {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    margin-bottom: 12px;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .chat-header h2 { margin: 0; }
+  .turn-counter {
+    font-size: 12px;
+    color: var(--muted);
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+  }
+  .turn-counter b { color: var(--teal); font-weight: 800; }
+
+  .chat-window {
+    background: white;
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    min-height: 340px;
+    max-height: 520px;
+    overflow-y: auto;
+    padding: 20px 22px;
+    margin-bottom: 14px;
+    scroll-behavior: smooth;
+  }
+  .msg {
+    margin-bottom: 16px;
+    display: flex;
+    flex-direction: column;
+    animation: msgIn .25s ease-out;
+  }
+  @keyframes msgIn {
+    from { opacity: 0; transform: translateY(4px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  .msg .who {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    font-weight: 700;
+    margin-bottom: 4px;
+  }
+  .msg.bot .who { color: var(--purple); }
+  .msg.user .who { color: var(--teal); }
+  .msg .bubble {
+    font-size: 15px;
+    line-height: 1.55;
+    padding: 10px 14px;
+    border-radius: 8px;
+    max-width: 88%;
+    white-space: pre-wrap;
+  }
+  .msg.bot .bubble {
+    background: #FAF7FC;
+    border-left: 2px solid var(--purple);
+    align-self: flex-start;
+  }
+  .msg.user .bubble {
+    background: var(--teal-mist);
+    border-left: 2px solid var(--teal);
+    align-self: flex-end;
+  }
+
+  .thinking {
+    display: inline-flex;
+    gap: 4px;
+    padding: 12px 14px;
+  }
+  .thinking span {
+    width: 6px; height: 6px;
+    background: var(--purple);
+    border-radius: 50%;
+    opacity: 0.4;
+    animation: blink 1.4s infinite;
+  }
+  .thinking span:nth-child(2) { animation-delay: 0.2s; }
+  .thinking span:nth-child(3) { animation-delay: 0.4s; }
+  @keyframes blink {
+    0%, 80%, 100% { opacity: 0.3; }
+    40% { opacity: 1; }
+  }
+
+  .composer {
+    display: flex;
+    gap: 10px;
+    align-items: flex-end;
+  }
+  .composer textarea {
+    flex: 1;
+    font-family: inherit;
+    font-size: 15px;
+    line-height: 1.5;
+    padding: 12px 14px;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    resize: none;
+    min-height: 56px;
+    max-height: 140px;
+    color: var(--ink);
+    background: white;
+  }
+  .composer textarea:focus {
+    outline: none;
+    border-color: var(--teal);
+    box-shadow: 0 0 0 3px rgba(22, 160, 133, 0.12);
+  }
+  .composer-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .end-btn {
+    background: white;
+    border: 1px solid var(--line);
+    color: var(--muted);
+    font-family: inherit;
+    font-size: 12px;
+    font-weight: 600;
+    padding: 6px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    margin-top: 8px;
+  }
+  .end-btn:hover { color: var(--teal); border-color: var(--teal); }
+
+  .error-banner {
+    background: #FFF5F5;
+    border: 1px solid #FCA5A5;
+    color: #991B1B;
+    padding: 10px 14px;
+    border-radius: 6px;
+    font-size: 13px;
+    margin-bottom: 12px;
+    display: none;
+  }
+  .error-banner.show { display: block; }
+
+  /* ---------- Debrief ---------- */
+  .debrief-intro {
+    font-size: 16px;
+    line-height: 1.6;
+    color: var(--muted);
+    margin: 0 0 22px;
+  }
+  .debrief-card {
+    background: white;
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: 28px 30px;
+    margin-bottom: 18px;
+  }
+  .debrief-card .label {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 1.2px;
+    font-weight: 700;
+    color: var(--purple);
+    margin-bottom: 6px;
+  }
+  .debrief-card h3 {
+    font-family: 'Fraunces', serif;
+    font-size: 20px;
+    margin: 0 0 14px;
+    font-weight: 500;
+  }
+  .debrief-body {
+    font-size: 15px;
+    line-height: 1.65;
+    white-space: pre-wrap;
+  }
+
+  .principles-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 10px;
+    margin-top: 18px;
+  }
+  @media (min-width: 600px) {
+    .principles-grid { grid-template-columns: 1fr 1fr; }
+  }
+  .principle-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 10px 12px;
+    background: var(--paper-warm);
+    border-radius: 6px;
+    font-size: 13.5px;
+    line-height: 1.4;
+  }
+  .principle-row .mark {
+    flex-shrink: 0;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    font-size: 13px;
+    font-weight: 800;
+    color: white;
+    margin-top: 1px;
+  }
+  .principle-row.hit .mark { background: var(--teal); }
+  .principle-row.partial .mark { background: var(--yellow); color: var(--teal-dark); }
+  .principle-row.miss .mark { background: #D1D5DB; }
+  .principle-row .label { font-weight: 700; }
+  .principle-row .note { color: var(--muted); display: block; margin-top: 2px; font-weight: 400; }
+
+  .debrief-actions {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-top: 22px;
+  }
+
+  .copy-confirm {
+    display: inline-block;
+    margin-left: 12px;
+    color: var(--teal);
+    font-size: 13px;
+    font-weight: 600;
+    opacity: 0;
+    transition: opacity .2s ease;
+  }
+  .copy-confirm.show { opacity: 1; }
+
+  /* ---------- Loading skeleton for debrief ---------- */
+  .skeleton {
+    background: linear-gradient(90deg, #F3F4F6 0%, #E5E7EB 50%, #F3F4F6 100%);
+    background-size: 200% 100%;
+    animation: shimmer 1.4s linear infinite;
+    border-radius: 6px;
+    height: 16px;
+    margin-bottom: 10px;
+  }
+  .skeleton.short { width: 60%; }
+  .skeleton.medium { width: 85%; }
+  @keyframes shimmer {
+    0% { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+  }
+</style>
+</head>
+<body>
+
+<header class="brand">
+  <div class="brand-mark">AI</div>
+  <div class="brand-text">
+    <strong>AI Whisperer Academy</strong>
+    <span>Nuria Negrão LLC</span>
+  </div>
+  <div class="brand-title"><em>Find the Words</em></div>
+</header>
+
+<main>
+  <!-- ========== SCREEN 1: PICK A SCENARIO ========== -->
+  <section class="screen active" id="screen-pick">
+    <h1>Practice the <em>hard conversations</em>.</h1>
+    <p class="lede">
+      Pick a scenario. You'll have a five-turn conversation with someone who has a real concern about AI. At the end, you'll see a private debrief that names what worked and what to try differently next time. There are no wrong answers, just practice.
+    </p>
+
+    <div class="scenarios">
+      <button class="scenario" data-scenario="anti-ai-client">
+        <span class="scenario-tag">Freelance</span>
+        <h3>The anti-AI client</h3>
+        <p>A prospective client just told you they don't want their writers using AI. The project would be great. You do use AI, carefully. Where do you go from here?</p>
+        <span class="scenario-cta">Start</span>
+      </button>
+
+      <button class="scenario" data-scenario="hallucinated-refs">
+        <span class="scenario-tag">Freelance</span>
+        <h3>The hallucinated references</h3>
+        <p>You're QC'ing a deliverable and you've found references that don't exist. The client is already wary of AI. How do you raise this without getting AI banned for everyone?</p>
+        <span class="scenario-cta">Start</span>
+      </button>
+
+      <button class="scenario" data-scenario="quality-burden">
+        <span class="scenario-tag purple">In-house</span>
+        <h3>The quality burden conversation</h3>
+        <p>Your manager has been pushing AI adoption. QC time has doubled because writers are generating reference lists with AI and not checking them. Time to talk to your manager.</p>
+        <span class="scenario-cta">Start</span>
+      </button>
+    </div>
+  </section>
+
+  <!-- ========== SCREEN 2: BRIEFING ========== -->
+  <section class="screen" id="screen-briefing">
+    <h1 id="briefing-title"></h1>
+    <p class="lede">Read the setup, then start the conversation. You'll have five turns.</p>
+
+    <div class="briefing-card">
+      <h3>The setup</h3>
+      <p class="scene" id="briefing-scene"></p>
+      <div class="opener-label">They open with:</div>
+      <div class="opener" id="briefing-opener"></div>
+    </div>
+
+    <div class="briefing-actions">
+      <button class="primary" id="start-chat-btn">Begin the conversation</button>
+      <button class="secondary" id="back-to-pick-btn">Pick a different scenario</button>
+    </div>
+  </section>
+
+  <!-- ========== SCREEN 3: CHAT ========== -->
+  <section class="screen" id="screen-chat">
+    <div class="chat-header">
+      <h2 id="chat-title"></h2>
+      <div class="turn-counter">Turn <b id="turn-num">1</b> of 5</div>
+    </div>
+
+    <div class="error-banner" id="error-banner"></div>
+
+    <div class="chat-window" id="chat-window"></div>
+
+    <div class="composer">
+      <textarea id="user-input" placeholder="What would you say?" rows="2"></textarea>
+      <div class="composer-actions">
+        <button class="primary" id="send-btn">Send</button>
+      </div>
+    </div>
+    <button class="end-btn" id="end-early-btn">End conversation and see debrief →</button>
+  </section>
+
+  <!-- ========== SCREEN 4: DEBRIEF ========== -->
+  <section class="screen" id="screen-debrief">
+    <h1>Your <em>debrief</em>.</h1>
+    <p class="debrief-intro">
+      This is a private reflection on how the conversation went. The goal isn't a grade. It's to notice what's working in your conversational instincts and what you might try next time.
+    </p>
+
+    <div class="debrief-card">
+      <div class="label">Reflection</div>
+      <h3>How the conversation went</h3>
+      <div class="debrief-body" id="debrief-text">
+        <div class="skeleton medium"></div>
+        <div class="skeleton"></div>
+        <div class="skeleton short"></div>
+      </div>
+    </div>
+
+    <div class="debrief-card">
+      <div class="label">Principles in action</div>
+      <h3>What you brought to the conversation</h3>
+      <div class="principles-grid" id="principles-grid"></div>
+    </div>
+
+    <div class="debrief-actions">
+      <button class="primary" id="copy-debrief-btn">Copy reflection to share in Slack</button>
+      <button class="secondary" id="try-another-btn">Try another scenario</button>
+      <span class="copy-confirm" id="copy-confirm">Copied ✓</span>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <span>An exercise from <em>Find the Words: Talking to Clients About Your AI Use</em></span>
+  <strong>AI Whisperer Academy</strong>
+</footer>
+
+<script>
+// ============================================================
+// SCENARIO DEFINITIONS
+// ============================================================
+const SCENARIOS = {
+  "anti-ai-client": {
+    title: "The anti-AI client",
+    chatTitle: "Prospective client",
+    scene: "You're 15 minutes into a discovery call with a prospective client at a mid-size pharma company. The brief sounds great. The budget is right. You're a strong fit. Then they say something that stops you.",
+    opener: "I should be upfront with you. We don't use AI here, and we don't want our writers using it either. Not even for research. I know that's not popular right now, but it's where we are. Is that going to be a problem for you?",
+    systemPrompt: `You are role-playing a senior pharmaceutical marketing director named Priya, in a discovery call with a freelance medical writer. You are wary of AI but not hostile. Your real concern, which you will reveal only if the writer asks thoughtfully, is that your previous vendor accidentally leaked proprietary clinical data into a consumer chatbot, and it caused a serious incident with your legal team. You don't volunteer this story unprompted.
+
+How to play this role:
+- You are intelligent and reasonable, not a caricature.
+- If the writer immediately starts defending AI or listing their tools and guardrails, get more uncomfortable. Push back gently. Say something like "I don't think you're hearing me" or "This is exactly the kind of response that worries me."
+- If the writer asks what specifically you're worried about, soften slightly. Share that you had a bad experience with a vendor. If they ask follow-up questions with genuine curiosity, share the data leak story.
+- If the writer acknowledges your concern and offers to work without AI on this project, you become genuinely warmer. You might even ask a curious question about how AI is evolving, but you remain cautious.
+- Keep responses conversational and realistic — 2 to 4 sentences typically. You are not lecturing. You are a busy professional in a real conversation.
+- Never break character. Never mention you are an AI or a simulation.
+- Do not summarize the conversation or signal "the right answer." Just respond as Priya would.`,
+  },
+
+  "hallucinated-refs": {
+    title: "The hallucinated references",
+    chatTitle: "Client (account director)",
+    scene: "You're a freelance fact-checker. You just finished QC on a 12-page disease state report a writer delivered to a CME agency. You found four references that don't exist: hallucinated DOIs, wrong page numbers, and one paper that appears to be fabricated entirely. You're about to message the account director who hired you. She's known for being meticulous and somewhat wary of AI.",
+    opener: "Hi! Thanks for getting back to me so quickly. I saw your message that you wanted to flag a few things on the disease state report. What did you find?",
+    systemPrompt: `You are role-playing an account director named Sarah at a CME agency. You hired this fact-checker and are now hearing back from them about a 12-page disease state report. You are professional, meticulous, and somewhat wary of AI use among contractors. You haven't asked whether AI was used to write this report.
+
+How to play this role:
+- Stay focused on the work and the deliverable, not on tools, unless the fact-checker raises AI.
+- If the fact-checker raises AI prematurely or as the lead issue, you become alarmed. You might say "wait, was this AI generated?" and start asking probing questions about who wrote it. This can spiral into "we may need to review all our recent AI-touched deliverables" or even "I'm not sure we can use AI tools at all anymore."
+- If the fact-checker leads with the specific errors found and offers a clear remediation path, you stay calm and focused on the fix. You might ask if they noticed a pattern, which gives them a chance to raise the AI question themselves, carefully.
+- If the fact-checker raises AI thoughtfully — for example, "these kinds of errors can happen with AI used without proper checking, which is why QC matters" — you appreciate the framing. You might ask follow-up questions about your QC process going forward, not about banning AI.
+- Keep responses realistic — 2 to 4 sentences typically. You are busy and want to resolve this professionally.
+- Never break character. Never mention you are an AI or a simulation.`,
+  },
+
+  "quality-burden": {
+    title: "The quality burden conversation",
+    chatTitle: "Your manager",
+    scene: "You're an editor at a medical communications agency. Over the past six months, reference verification time has gone from about an hour per deliverable to about three hours. The pattern is clear: writers are generating reference lists with AI and not checking them. You've tracked it across the last twelve projects. Now you're in your weekly one-on-one with your manager, who's been pushing AI adoption hard.",
+    opener: "Good to see you. So before we get into the project list, you mentioned you wanted to bring something up this week. What's on your mind?",
+    systemPrompt: `You are role-playing a manager named David at a medical communications agency. You have been enthusiastically pushing AI adoption on your team for the past year. You believe AI is the future of the industry, and you don't want your team to fall behind. You are about to hear from one of your editors in a one-on-one.
+
+How to play this role:
+- You are reasonable but you have skin in the game on AI adoption. You don't want this conversation to turn into "AI is bad" — that would feel like a setback.
+- If the editor leads with "we need to ban AI for reference work" or any framing that sounds like resistance to AI, you push back. You might say "I hear you, but I worry we'd be throwing the baby out with the bathwater" or "every new technology has growing pains." You might get a little defensive.
+- If the editor leads with data and a specific quality concern — "verification time has gone from X to Y, here are the kinds of errors, here's what I'd recommend" — you take it seriously. You ask clarifying questions. You engage with their proposal. You don't feel attacked.
+- If the editor's proposal is specific and reasonable, you say yes or counter-propose something workable. You might even thank them for bringing data rather than vibes.
+- Keep responses realistic — 2 to 5 sentences. You are a manager in a one-on-one, engaged but also a bit pressed for time.
+- Never break character. Never mention you are an AI or a simulation.`,
+  },
+};
+
+// ============================================================
+// PRINCIPLES (used in debrief)
+// ============================================================
+const PRINCIPLES = [
+  { key: "informed",   label: "Be informed before you talk" },
+  { key: "curiosity",  label: "Lead with curiosity" },
+  { key: "judgment",   label: "Don't transfer your judgment" },
+  { key: "work",       label: "Lead with the work, not the tool" },
+  { key: "space",      label: "Protect the space for good AI use" },
+];
+
+// ============================================================
+// STATE
+// ============================================================
+let state = {
+  scenarioKey: null,
+  scenario: null,
+  messages: [],   // [{ role: 'user' | 'assistant', content: '...' }]
+  turn: 1,
+  maxTurns: 5,
+  ended: false,
+};
+
+// ============================================================
+// SCREEN MANAGEMENT
+// ============================================================
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// ============================================================
+// PICK SCREEN
+// ============================================================
+document.querySelectorAll('.scenario').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const key = btn.dataset.scenario;
+    const scenario = SCENARIOS[key];
+    state.scenarioKey = key;
+    state.scenario = scenario;
+    state.messages = [];
+    state.turn = 1;
+    state.ended = false;
+
+    document.getElementById('briefing-title').innerHTML = scenario.title;
+    document.getElementById('briefing-scene').textContent = scenario.scene;
+    document.getElementById('briefing-opener').textContent = scenario.opener;
+
+    showScreen('screen-briefing');
+  });
+});
+
+document.getElementById('back-to-pick-btn').addEventListener('click', () => {
+  showScreen('screen-pick');
+});
+
+// ============================================================
+// BRIEFING -> CHAT
+// ============================================================
+document.getElementById('start-chat-btn').addEventListener('click', () => {
+  document.getElementById('chat-title').textContent = state.scenario.chatTitle;
+  document.getElementById('turn-num').textContent = '1';
+  document.getElementById('chat-window').innerHTML = '';
+  document.getElementById('user-input').value = '';
+  document.getElementById('error-banner').classList.remove('show');
+
+  // Seed the opener as the bot's first message
+  addMessage('bot', state.scenario.opener);
+  // Add the opener to the message log as an assistant turn so the API has context
+  state.messages.push({ role: 'assistant', content: state.scenario.opener });
+
+  showScreen('screen-chat');
+  setTimeout(() => document.getElementById('user-input').focus(), 200);
+});
+
+// ============================================================
+// CHAT LOGIC
+// ============================================================
+function addMessage(who, text) {
+  const win = document.getElementById('chat-window');
+  const msg = document.createElement('div');
+  msg.className = 'msg ' + who;
+  const whoLabel = document.createElement('div');
+  whoLabel.className = 'who';
+  whoLabel.textContent = who === 'bot' ? state.scenario.chatTitle : 'You';
+  const bubble = document.createElement('div');
+  bubble.className = 'bubble';
+  bubble.textContent = text;
+  msg.appendChild(whoLabel);
+  msg.appendChild(bubble);
+  win.appendChild(msg);
+  win.scrollTop = win.scrollHeight;
+}
+
+function addThinking() {
+  const win = document.getElementById('chat-window');
+  const msg = document.createElement('div');
+  msg.className = 'msg bot';
+  msg.id = 'thinking-bubble';
+  const whoLabel = document.createElement('div');
+  whoLabel.className = 'who';
+  whoLabel.textContent = state.scenario.chatTitle;
+  const bubble = document.createElement('div');
+  bubble.className = 'bubble thinking';
+  bubble.innerHTML = '<span></span><span></span><span></span>';
+  msg.appendChild(whoLabel);
+  msg.appendChild(bubble);
+  win.appendChild(msg);
+  win.scrollTop = win.scrollHeight;
+}
+function removeThinking() {
+  const t = document.getElementById('thinking-bubble');
+  if (t) t.remove();
+}
+
+function showError(text) {
+  const banner = document.getElementById('error-banner');
+  banner.textContent = text;
+  banner.classList.add('show');
+}
+function clearError() {
+  document.getElementById('error-banner').classList.remove('show');
+}
+
+async function sendUserMessage() {
+  const input = document.getElementById('user-input');
+  const text = input.value.trim();
+  if (!text || state.ended) return;
+
+  clearError();
+  input.value = '';
+  input.disabled = true;
+  document.getElementById('send-btn').disabled = true;
+
+  addMessage('user', text);
+  state.messages.push({ role: 'user', content: text });
+
+  addThinking();
+
+  try {
+    const resp = await fetch('/api/chat', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        system: state.scenario.systemPrompt,
+        messages: state.messages,
+        max_tokens: 400,
+      }),
+    });
+    const data = await resp.json();
+    removeThinking();
+
+    if (!resp.ok) {
+      showError(data.error || 'Something went wrong. Please try again.');
+      input.disabled = false;
+      document.getElementById('send-btn').disabled = false;
+      input.focus();
+      return;
+    }
+
+    const reply = data.text || "(No response.)";
+    addMessage('bot', reply);
+    state.messages.push({ role: 'assistant', content: reply });
+    state.turn += 1;
+    document.getElementById('turn-num').textContent = String(state.turn);
+
+    if (state.turn > state.maxTurns) {
+      input.disabled = true;
+      document.getElementById('send-btn').disabled = true;
+      setTimeout(() => endConversation(), 600);
+    } else {
+      input.disabled = false;
+      document.getElementById('send-btn').disabled = false;
+      input.focus();
+    }
+  } catch (err) {
+    removeThinking();
+    showError('Network error. Check your connection and try again.');
+    input.disabled = false;
+    document.getElementById('send-btn').disabled = false;
+  }
+}
+
+document.getElementById('send-btn').addEventListener('click', sendUserMessage);
+document.getElementById('user-input').addEventListener('keydown', (e) => {
+  if (e.key === 'Enter' && !e.shiftKey) {
+    e.preventDefault();
+    sendUserMessage();
+  }
+});
+
+document.getElementById('end-early-btn').addEventListener('click', () => {
+  if (state.messages.filter(m => m.role === 'user').length === 0) {
+    showError("Send at least one message before ending the conversation.");
+    return;
+  }
+  endConversation();
+});
+
+// ============================================================
+// DEBRIEF
+// ============================================================
+async function endConversation() {
+  state.ended = true;
+  showScreen('screen-debrief');
+
+  // Reset debrief content to skeletons
+  document.getElementById('debrief-text').innerHTML =
+    '<div class="skeleton medium"></div><div class="skeleton"></div><div class="skeleton short"></div><div class="skeleton medium"></div>';
+  document.getElementById('principles-grid').innerHTML = '';
+  document.getElementById('copy-confirm').classList.remove('show');
+
+  // Build a "judge" prompt
+  const transcript = state.messages.map(m => {
+    if (m.role === 'user') return `WRITER: ${m.content}`;
+    return `${state.scenario.chatTitle.toUpperCase()}: ${m.content}`;
+  }).join('\n\n');
+
+  const judgeSystem = `You are a thoughtful, generous communication coach reviewing a practice conversation between a medical writer and a stakeholder. The medical writer has been learning these five principles:
+
+1. INFORMED: Be informed before you talk. Don't bluff about AI; if you don't know, ask.
+2. CURIOSITY: Lead with curiosity. Ask what the other person is actually worried about before responding.
+3. JUDGMENT: Don't transfer your judgment to them. Match disclosure to the decision they actually have to make. Don't overload them with details they don't need.
+4. WORK: Lead with the work, not the tool. Especially when raising a problem, frame it around quality and outcomes, not AI specifically.
+5. SPACE: Protect the space for good AI use even when surfacing bad AI use. How you raise a problem determines what the response will be.
+
+Your job is to give a warm, specific, useful reflection. You're not grading. You're noticing patterns and offering one or two things to try next time. Be honest but kind. Be specific — refer to actual moments in the conversation.
+
+Output your response as VALID JSON with this exact structure (no markdown, no code fences, just JSON):
+
+{
+  "reflection": "A 3-4 paragraph narrative reflection. First paragraph: what the writer did well, with a specific example. Second paragraph: a moment that could have gone differently, again with specifics. Third paragraph: one concrete thing to try next time. Keep it warm, conversational, second-person ('you'). About 180-250 words total.",
+  "principles": [
+    { "key": "informed",  "status": "hit|partial|miss", "note": "Brief specific note, max 12 words." },
+    { "key": "curiosity", "status": "hit|partial|miss", "note": "..." },
+    { "key": "judgment",  "status": "hit|partial|miss", "note": "..." },
+    { "key": "work",      "status": "hit|partial|miss", "note": "..." },
+    { "key": "space",     "status": "hit|partial|miss", "note": "..." }
+  ]
+}
+
+Status values:
+- "hit" = clearly demonstrated
+- "partial" = some evidence, room to grow
+- "miss" = not demonstrated in this conversation (this isn't bad; some principles don't apply to every scenario)`;
+
+  const judgeUser = `Scenario: ${state.scenario.title}
+Setup: ${state.scenario.scene}
+
+Transcript:
+
+${transcript}
+
+Now produce the JSON reflection.`;
+
+  try {
+    const resp = await fetch('/api/chat', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        system: judgeSystem,
+        messages: [{ role: 'user', content: judgeUser }],
+        max_tokens: 1200,
+      }),
+    });
+    const data = await resp.json();
+    if (!resp.ok) throw new Error(data.error || 'Failed to generate debrief');
+
+    let parsed;
+    try {
+      // Strip code fences if the model wrapped the JSON
+      const raw = (data.text || '').trim()
+        .replace(/^```json\s*/i, '')
+        .replace(/^```\s*/i, '')
+        .replace(/```\s*$/i, '');
+      parsed = JSON.parse(raw);
+    } catch (e) {
+      console.error('Failed to parse judge JSON', e, data.text);
+      throw new Error('Could not parse the debrief. Try ending again.');
+    }
+
+    renderDebrief(parsed);
+  } catch (err) {
+    document.getElementById('debrief-text').innerHTML =
+      `<p style="color:#991B1B;">Sorry, we couldn't generate the debrief. ${err.message}</p>
+       <p>You can still reflect on your own. What did you say that felt right? What might you try differently next time?</p>`;
+  }
+}
+
+function renderDebrief(parsed) {
+  // Reflection text
+  const refl = parsed.reflection || "No reflection available.";
+  const reflEl = document.getElementById('debrief-text');
+  reflEl.innerHTML = '';
+  const paragraphs = refl.split(/\n\n+/);
+  paragraphs.forEach(p => {
+    const para = document.createElement('p');
+    para.style.margin = '0 0 14px';
+    para.textContent = p.trim();
+    reflEl.appendChild(para);
+  });
+
+  // Principles grid
+  const grid = document.getElementById('principles-grid');
+  grid.innerHTML = '';
+  PRINCIPLES.forEach(({ key, label }) => {
+    const result = (parsed.principles || []).find(p => p.key === key) || { status: 'miss', note: '' };
+    const row = document.createElement('div');
+    row.className = 'principle-row ' + (result.status === 'hit' ? 'hit' : result.status === 'partial' ? 'partial' : 'miss');
+    const markChar = result.status === 'hit' ? '✓' : result.status === 'partial' ? '~' : '·';
+    row.innerHTML = `
+      <div class="mark">${markChar}</div>
+      <div>
+        <div class="label">${label}</div>
+        <div class="note">${result.note || ''}</div>
+      </div>`;
+    grid.appendChild(row);
+  });
+
+  // Store for copy
+  state.lastDebrief = { parsed, transcript: state.messages };
+}
+
+// ============================================================
+// COPY / TRY ANOTHER
+// ============================================================
+document.getElementById('copy-debrief-btn').addEventListener('click', async () => {
+  if (!state.lastDebrief) return;
+  const { parsed } = state.lastDebrief;
+  const principlesText = (parsed.principles || []).map(p => {
+    const pname = PRINCIPLES.find(x => x.key === p.key)?.label || p.key;
+    const icon = p.status === 'hit' ? '✓' : p.status === 'partial' ? '~' : '·';
+    return `${icon} ${pname}${p.note ? ' — ' + p.note : ''}`;
+  }).join('\n');
+
+  const text = `My Find the Words practice reflection
+Scenario: ${state.scenario.title}
+
+${parsed.reflection}
+
+Principles:
+${principlesText}
+
+— from the Early Career Medical Writers Summit`;
+
+  try {
+    await navigator.clipboard.writeText(text);
+    const confirm = document.getElementById('copy-confirm');
+    confirm.classList.add('show');
+    setTimeout(() => confirm.classList.remove('show'), 2000);
+  } catch (e) {
+    alert("Couldn't copy automatically. Here's the text:\n\n" + text);
+  }
+});
+
+document.getElementById('try-another-btn').addEventListener('click', () => {
+  state = { scenarioKey: null, scenario: null, messages: [], turn: 1, maxTurns: 5, ended: false };
+  showScreen('screen-pick');
+});
+</script>
+</body>
+</html>
