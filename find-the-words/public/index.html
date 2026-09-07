@@ -700,6 +700,14 @@ How to play this role:
 };
 
 // ============================================================
+// WRITING RULES (appended to every system prompt)
+// Canonical copy lives in WRITING_RULES.md. Keep the two in sync.
+// ============================================================
+const WRITING_RULES = `Writing rules. Follow these in everything you write.
+
+Mannered prose: Mannered prose substitutes metaphor and flourish for direct statement. Instead of "a parameter worth varying," the mannered writer produces "a dial worth turning." Instead of "this point still matters," they write "this point earns its keep." The phrases exist to display the writer, not to convey the idea, and readers can tell. That is why mannered prose irritates: it makes the reader work harder so the writer can perform. It is also imprecise. Metaphors drag in connotations the writer did not choose and cannot control. The fix is to say what you mean. When a literal phrase is available, use it.`;
+
+// ============================================================
 // PRINCIPLES (used in debrief)
 // ============================================================
 const PRINCIPLES = [
@@ -844,7 +852,7 @@ async function sendUserMessage() {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        system: state.scenario.systemPrompt,
+        system: state.scenario.systemPrompt + '\n\n' + WRITING_RULES,
         messages: state.messages,
         max_tokens: 400,
       }),
@@ -960,7 +968,7 @@ Now produce the JSON reflection.`;
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        system: judgeSystem,
+        system: judgeSystem + '\n\n' + WRITING_RULES,
         messages: [{ role: 'user', content: judgeUser }],
         max_tokens: 1200,
       }),
