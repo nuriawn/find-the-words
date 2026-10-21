@@ -492,6 +492,16 @@
   .principle-row .label { font-weight: 700; }
   .principle-row .note { color: var(--muted); display: block; margin-top: 2px; font-weight: 400; }
 
+  .adkar-line {
+    margin: 18px 0 0;
+    padding-top: 14px;
+    border-top: 1px solid var(--line);
+    font-size: 14px;
+    line-height: 1.5;
+    color: var(--muted);
+  }
+  .adkar-line strong { color: var(--purple); }
+
   .debrief-actions {
     display: flex;
     gap: 12px;
@@ -629,6 +639,7 @@
       <div class="label">Principles in action</div>
       <h3>What you brought to the conversation</h3>
       <div class="principles-grid" id="principles-grid"></div>
+      <p class="adkar-line" id="adkar-line" hidden></p>
     </div>
 
     <div class="debrief-actions">
@@ -708,6 +719,15 @@ const PRINCIPLES = [
   { key: "judgment",   label: "Don't transfer your judgment" },
   { key: "work",       label: "Lead with the work, not the tool" },
   { key: "space",      label: "Protect the space for good AI use" },
+];
+
+// ADKAR elements, in order (used in debrief)
+const ADKAR = [
+  { key: "awareness",     label: "Awareness" },
+  { key: "desire",        label: "Desire" },
+  { key: "knowledge",     label: "Knowledge" },
+  { key: "ability",       label: "Ability" },
+  { key: "reinforcement", label: "Reinforcement" },
 ];
 
 // ============================================================
@@ -910,6 +930,7 @@ async function endConversation() {
   document.getElementById('debrief-text').innerHTML =
     '<div class="skeleton medium"></div><div class="skeleton"></div><div class="skeleton short"></div><div class="skeleton medium"></div>';
   document.getElementById('principles-grid').innerHTML = '';
+  document.getElementById('adkar-line').hidden = true;
   document.getElementById('copy-confirm').classList.remove('show');
 
   // Build a "judge" prompt
@@ -926,6 +947,13 @@ async function endConversation() {
 4. WORK: Lead with the work, not the tool. Especially when raising a problem, frame it around quality and outcomes, not AI specifically.
 5. SPACE: Protect the space for good AI use even when surfacing bad AI use. How you raise a problem determines what the response will be.
 
+You also read the conversation through the ADKAR change model. The other person (not the writer) is somewhere in their own change around AI. Identify the FIRST ADKAR element that seemed missing for them — their barrier point:
+- awareness: doesn't see why anything needs to change
+- desire: understands, but doesn't want to take part (often because of a past bad experience or a perceived loss)
+- knowledge: willing, but doesn't know how to do it well
+- ability: knows how, but can't yet do it in practice (time, tools, process)
+- reinforcement: the change happened, but nothing is keeping it working (no checks, no follow-through)
+
 Your job is to give a warm, specific, useful reflection. You're not grading. You're noticing patterns and offering one or two things to try next time. Be honest but kind. Be specific — refer to actual moments in the conversation.
 
 Output your response as VALID JSON with this exact structure (no markdown, no code fences, just JSON):
@@ -938,7 +966,8 @@ Output your response as VALID JSON with this exact structure (no markdown, no co
     { "key": "judgment",  "status": "hit|partial|miss", "note": "..." },
     { "key": "work",      "status": "hit|partial|miss", "note": "..." },
     { "key": "space",     "status": "hit|partial|miss", "note": "..." }
-  ]
+  ],
+  "adkar": { "barrier": "awareness|desire|knowledge|ability|reinforcement", "note": "Why, citing the conversation, max 20 words." }
 }
 
 Status values:
@@ -1019,8 +1048,29 @@ function renderDebrief(parsed) {
     grid.appendChild(row);
   });
 
+  // ADKAR barrier line
+  const adkarEl = document.getElementById('adkar-line');
+  const adkar = getAdkarBarrier(parsed);
+  if (adkar) {
+    adkarEl.textContent = '';
+    adkarEl.append('In ADKAR terms, they seemed stuck at ');
+    const strong = document.createElement('strong');
+    strong.textContent = adkar.label;
+    adkarEl.append(strong, adkar.note ? `. ${adkar.note}` : '.');
+    adkarEl.hidden = false;
+  }
+
   // Store for copy
   state.lastDebrief = { parsed, transcript: state.messages };
+}
+
+// Returns { label, note } for a valid ADKAR barrier in the judge output, or null.
+function getAdkarBarrier(parsed) {
+  const barrier = String(parsed.adkar?.barrier || '').toLowerCase().trim();
+  const element = ADKAR.find(a => a.key === barrier);
+  if (!element) return null;
+  const note = String(parsed.adkar.note || '').trim().replace(/\.$/, '');
+  return { label: element.label, note: note ? note + '.' : '' };
 }
 
 // ============================================================
@@ -1035,13 +1085,16 @@ document.getElementById('copy-debrief-btn').addEventListener('click', async () =
     return `${icon} ${pname}${p.note ? ' — ' + p.note : ''}`;
   }).join('\n');
 
+  const adkar = getAdkarBarrier(parsed);
+  const adkarText = adkar ? `\n\nADKAR barrier: ${adkar.label}${adkar.note ? ' — ' + adkar.note : ''}` : '';
+
   const text = `My Find the Words practice reflection
 Scenario: ${state.scenario.title}
 
 ${parsed.reflection}
 
 Principles:
-${principlesText}
+${principlesText}${adkarText}
 
 — from the Early Career Medical Writers Summit`;
 

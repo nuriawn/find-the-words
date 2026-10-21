@@ -100,11 +100,11 @@ The debrief already scores five principles (`PRINCIPLES` in `public/index.html`)
 
 ---
 
-## 4. Possible uses in the app (not implemented)
+## 4. Possible uses in the app
 
-None of these are built. They're options if the session wants to bring in change frameworks explicitly:
+Only the first is built. The others are options if the session wants to bring in change frameworks explicitly:
 
-1. **Debrief add-on:** After the five-principle scorecard, add one line like "In ADKAR terms, the other person seemed stuck at **Desire**." This could come from the judge prompt as an extra JSON field (`adkarBarrier`). The change would be about 10 lines in the `judgeSystem` string and the render function.
+1. **Debrief add-on (implemented):** Below the five-principle scorecard, the debrief now shows a line like "In ADKAR terms, they seemed stuck at **Desire**." The judge prompt returns it as an `adkar` JSON field. The line is hidden if the field is missing or invalid, and it's included in the copied Slack reflection.
 2. **Briefing screen hint:** A collapsible "Before you start: what might they be losing?" prompt (Bridges) on the scenario briefing card.
 3. **A fourth scenario:** A writer who resists their *own* team's AI rollout. The participant plays the peer or manager, which reverses the direction of the other three.
 4. **Slack reflection prompt:** Add "Which ADKAR element was the barrier?" to the copied reflection, to start cohort discussion.
